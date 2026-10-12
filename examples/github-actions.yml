@@ -1,0 +1,23 @@
+name: Preflight example
+on: [workflow_dispatch]
+jobs:
+  demonstrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Missing variable fails; explicit example passes
+        shell: bash
+        run: |
+          unset PREFLIGHT_EXAMPLE
+          set +e
+          node -- dist/cli.js check --config examples/preflight.config.json --json
+          result=$?
+          set -e
+          test "$result" -eq 1
+          node -- dist/cli.js check --config examples/preflight.config.json --env-file examples/.env.example --json

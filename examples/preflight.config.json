@@ -1,0 +1,4 @@
+{
+  "requiredEnv": ["PREFLIGHT_EXAMPLE"],
+  "requiredFiles": ["../README.md"]
+}
