@@ -6,7 +6,7 @@ import { join } from 'node:path';
 
 // Missing defaults, permissive validation or raw parser errors break these contracts.
 test('loads defaults and anchors relative files to the configuration directory', async () => {
-  const { loadConfig } = await import('../src/config.ts');
+  const { loadConfig } = await import('../dist/config.js');
   const dir = await mkdtemp(join(tmpdir(), 'preflight-'));
   try {
     await writeFile(join(dir, 'config.json'), JSON.stringify({urls:[{name:'Health',env:'API'}]}));
@@ -17,7 +17,7 @@ test('loads defaults and anchors relative files to the configuration directory',
 });
 
 test('rejects invalid configuration without disclosing input', async () => {
-  const { loadConfig, ConfigError } = await import('../src/config.ts');
+  const { loadConfig, ConfigError } = await import('../dist/config.js');
   const dir = await mkdtemp(join(tmpdir(), 'preflight-'));
   const invalid = [null,[],{extra:true},{requiredEnv:[42]},{requiredEnv:['']},{requiredFiles:[' ']},
     {urls:[{name:'x'}]},{urls:[{name:'x',env:'API',url:'https://example.com'}]},
@@ -36,3 +36,4 @@ test('rejects invalid configuration without disclosing input', async () => {
     });
   } finally { await rm(dir,{recursive:true,force:true}); }
 });
+
