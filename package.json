@@ -2,6 +2,11 @@
   "name": "deploy-preflight",
   "version": "0.1.0",
   "description": "Check environment, files and endpoints before deploying.",
+  "author": "Enzo Bellussi",
+  "repository": { "type": "git", "url": "git+https://github.com/bellussi1/deploy-preflight.git" },
+  "bugs": { "url": "https://github.com/bellussi1/deploy-preflight/issues" },
+  "homepage": "https://github.com/bellussi1/deploy-preflight#readme",
+  "keywords": ["cli", "deployment", "preflight", "devops", "environment", "ci"],
   "type": "module",
   "engines": {
     "node": ">=24"
