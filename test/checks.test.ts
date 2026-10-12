@@ -6,6 +6,28 @@ import { tmpdir } from 'node:os';
 import { createServer } from 'node:http';
 import { once } from 'node:events';
 
+test('inherited property names are missing variables, never runtime errors',async()=>{
+  const {runChecks}=await import('../dist/runner.js');
+  const report=await runChecks({requiredEnv:['constructor','toString','__proto__'],requiredFiles:[],urls:[{name:'API',env:'constructor',expectedStatus:200,timeoutMs:500}]},tmpdir(),{},false);
+  assert.equal(report.passed,false);
+  assert.deepEqual(report.results.map(r=>r.code),['ENV_MISSING','ENV_MISSING','ENV_MISSING','URL_INVALID']);
+});
+test('Windows process variables override differently cased file names including empty values',{skip:process.platform!=='win32'},async()=>{
+  const {loadEnvironment}=await import('../dist/environment.js');
+  const {checkEnvironment}=await import('../dist/checks.js');
+  const {checkUrls}=await import('../dist/checks.js');
+  const dir=await mkdtemp(join(tmpdir(),'preflight-'));
+  try{
+    const file=join(dir,'.env');await writeFile(file,'preflight_case=file');
+    const env=await loadEnvironment(file,{PREFLIGHT_CASE:''});
+    assert.equal(checkEnvironment(['preflight_case'],env)[0]?.passed,false);
+    assert.equal((await checkUrls([{name:'Case',env:'preflight_case',expectedStatus:200,timeoutMs:500}],env,false))[0]?.passed,false);
+    const present=await loadEnvironment(undefined,{PREFLIGHT_CASE:'https://example.com'});
+    assert.equal(checkEnvironment(['preflight_case'],present)[0]?.passed,true);
+    assert.equal((await checkUrls([{name:'Case',env:'preflight_case',expectedStatus:200,timeoutMs:500}],present,false))[0]?.passed,true);
+  }finally{await rm(dir,{recursive:true,force:true});}
+});
+
 test('environment preserves empty process values and does not mutate input', async () => {
   const {loadEnvironment} = await import('../dist/environment.js');
   const {checkEnvironment} = await import('../dist/checks.js');

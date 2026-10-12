@@ -70,7 +70,7 @@ URLs must use HTTP or HTTPS and must not include a username or password. Without
 
 Exit **0** means all checks pass; **1** means at least one check failed; **2** means invalid arguments, unreadable/invalid configuration, environment file errors or an internal error. Duplicate flags are rejected.
 
-Process environment values override the explicit env file, including empty values. Loading a file does not modify the process environment. Parsing uses Node's native dotenv parser.
+Process environment values override the explicit env file, including empty values. Names are case-insensitive on Windows and case-sensitive elsewhere. Loading a file does not modify the process environment. Parsing uses Node's native dotenv parser.
 
 ```json
 {"passed":false,"results":[{"kind":"env","name":"DATABASE_URL","passed":false,"code":"ENV_MISSING"}]}

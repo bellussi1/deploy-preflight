@@ -19,8 +19,8 @@ function urlCheck(value: unknown): UrlCheck {
   if (!text(value.name) || (Object.hasOwn(value,'url') === Object.hasOwn(value,'env'))) throw new ConfigError();
   if (value.url !== undefined && !text(value.url) || value.env !== undefined && !text(value.env)) throw new ConfigError();
   if (value.path !== undefined && !text(value.path)) throw new ConfigError();
-  const status = value.expectedStatus ?? 200;
-  const timeout = value.timeoutMs ?? 5000;
+  const status = value.expectedStatus === undefined ? 200 : value.expectedStatus;
+  const timeout = value.timeoutMs === undefined ? 5000 : value.timeoutMs;
   if (!Number.isInteger(status) || Number(status) < 100 || Number(status) > 599 || !Number.isInteger(timeout) || Number(timeout) < 100 || Number(timeout) > 30000) throw new ConfigError();
   return {...value,expectedStatus:status,timeoutMs:timeout} as UrlCheck;
 }

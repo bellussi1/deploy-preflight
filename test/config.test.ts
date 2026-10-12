@@ -23,7 +23,9 @@ test('rejects invalid configuration without disclosing input', async () => {
     {urls:[{name:'x'}]},{urls:[{name:'x',env:'API',url:'https://example.com'}]},
     {urls:[{name:'x',env:'API',extra:1}]},{urls:[{name:'x',env:'API',expectedStatus:600}]},
     {urls:[{name:'x',env:'API',expectedStatus:199.5}]},{urls:[{name:'x',env:'API',timeoutMs:99}]},
-    {urls:[{name:'x',env:'API',timeoutMs:30001}]}];
+    {urls:[{name:'x',env:'API',timeoutMs:30001}]},
+    {urls:[{name:'x',env:'API',expectedStatus:null}]},
+    {urls:[{name:'x',env:'API',timeoutMs:null}]}];
   try {
     for (const value of invalid) {
       await writeFile(join(dir,'config.json'),JSON.stringify(value));

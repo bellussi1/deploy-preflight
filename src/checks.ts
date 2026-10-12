@@ -2,9 +2,10 @@ import type {CheckResult,UrlCheck} from './types.js';
 import {stat,access} from 'node:fs/promises';
 import {constants} from 'node:fs';
 import {resolve} from 'node:path';
+import {environmentValue} from './environment.js';
 const result=(kind:CheckResult['kind'],name:string,passed:boolean,code:string):CheckResult=>({kind,name,passed,code});
 export function checkEnvironment(names:string[],env:NodeJS.ProcessEnv):CheckResult[]{
-  return names.map(name=>{const passed=Boolean(env[name]?.trim());return result('env',name,passed,passed?'ENV_OK':'ENV_MISSING');});
+  return names.map(name=>{const passed=Boolean(environmentValue(env,name)?.trim());return result('env',name,passed,passed?'ENV_OK':'ENV_MISSING');});
 }
 export async function checkFiles(paths:string[],base:string):Promise<CheckResult[]>{
   return Promise.all(paths.map(async name=>{
@@ -45,7 +46,7 @@ export async function checkUrls(checks:UrlCheck[],env:NodeJS.ProcessEnv,probe:bo
   for(const check of checks){
     let url:URL;
     try {
-      const source=check.env === undefined ? check.url : env[check.env];
+      const source=check.env === undefined ? check.url : environmentValue(env,check.env);
       if(!source?.trim())throw new Error('Missing URL.');
       url=safeUrl(source);
       if(check.path!==undefined){const next=safeUrl(new URL(check.path,url).href);if(next.origin!==url.origin)throw new Error('Invalid path.');url=next;}
