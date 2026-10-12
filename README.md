@@ -2,6 +2,8 @@
 
 Catch missing environment variables, build artifacts and invalid endpoints before a deployment starts.
 
+[![CI](https://github.com/bellussi1/deploy-preflight/actions/workflows/ci.yml/badge.svg)](https://github.com/bellussi1/deploy-preflight/actions/workflows/ci.yml)
+
 A small Node.js CLI for local workflows and CI. No account, hosted service or production dependencies. HTTP requests are opt-in.
 
 ## Try it locally
@@ -110,3 +112,5 @@ npm pack --dry-run
 Tests use real temporary files, subprocesses and local HTTP servers; HTTP tests do not call external services. Permission denial is exercised on platforms where it can be reproduced. Packaging tests install a local tarball without publishing it.
 
 MIT © Enzo Bellussi.
+
+See [contribution guidelines](CONTRIBUTING.md), [architecture](docs/architecture.md) and [changelog](CHANGELOG.md).
